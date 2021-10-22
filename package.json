@@ -1,0 +1,20 @@
+{
+  "name": "amazone",
+  "version": "1.0.0",
+  "description": "This Amazone Clone MERN Stack Project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon --watch backend --exec node --experimental-modules backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "amazone-clone"
+  ],
+  "author": "Muhammad Aji Putra",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  }
+}
