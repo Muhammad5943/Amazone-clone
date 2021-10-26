@@ -1,6 +1,7 @@
 import express from 'express'
 import data from './data.js'
 import dotenv from 'dotenv'
+import morgan from 'morgan'
 import mongoose from 'mongoose'
 import userRouter from './routers/userRouter.js'
 
@@ -19,6 +20,7 @@ try {
      console.log("could not connect")
 }
 
+app.use(morgan('dev'))
 
 app.get('/', (req, res) => {
      res.send('Server is built')
@@ -44,7 +46,7 @@ app.get('/api/product/:_id', (req, res) => {
 app.use('/api/users', userRouter)
 
 app.use((err, req, res, next) => {
-     res.statue(500).send({
+     res.status(500).send({
           message: err.message
      })
 })

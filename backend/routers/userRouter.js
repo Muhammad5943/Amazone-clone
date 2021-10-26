@@ -9,8 +9,19 @@ userRouter.get(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // await User.remove({})
+          // console.log('inside');
+          const Users = await User.find()
+          res.status(200).json({ Users: Users }) 
+     })
+)
+
+userRouter.post(
+     '/seed',
+     expressAsyncHandler(async (req,res) => {
+          // await User.remove({})
+          // console.log('inside');
           const createdUsers = await User.insertMany(data.users)
-          res.send({ createdUsers }) 
+          res.status(200).json({ createdUsers }) 
      })
 )
 
