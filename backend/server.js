@@ -5,10 +5,17 @@ import morgan from 'morgan'
 import mongoose from 'mongoose'
 import userRouter from './routers/userRouter.js'
 import productRouter from './routers/productRouter.js'
+import bodyParser from 'body-parser'
 
 dotenv.config()
 
 const app = express()
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+/* from the original */
+// app.use(express.json())
+// app.use(express.urlencoded({ extended: true }))
 
 try {
      mongoose.connect(process.env.MONGODB_URL, {
@@ -18,7 +25,7 @@ try {
           useFindAndModify: true
      }, () => console.log('Database Connected'))
 } catch (error) {
-     console.log("could not connect")
+     console.log("could not connect to database")
 }
 
 app.use(morgan('dev'))
