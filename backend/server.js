@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
 import userRouter from './routers/userRouter.js'
+import productRouter from './routers/productRouter.js'
 
 dotenv.config()
 
@@ -32,18 +33,19 @@ app.get('/api/products', (req, res) => {
      })
 })
 
-app.get('/api/product/:_id', (req, res) => {
-     const product = data.products.find((x) => x._id === req.params._id)
-     if (product) {
-          res.send(product)
-     } else {
-          res.status(404).send({
-               message: 'Product not found'
-          })
-     }
-})
+// app.get('/api/product/:_id', (req, res) => {
+//      const product = data.products.find((x) => x._id === req.params._id)
+//      if (product) {
+//           res.send(product)
+//      } else {
+//           res.status(404).send({
+//                message: 'Product not found'
+//           })
+//      }
+// })
 
 app.use('/api/users', userRouter)
+app.use('/api/products', productRouter)
 
 app.use((err, req, res, next) => {
      res.status(500).send({
