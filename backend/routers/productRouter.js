@@ -25,6 +25,7 @@ productRouter.post(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // try {
+               console.log('data ', data);
                if (data.products) {
                     const createProducts = await Product.insertMany(data.products)
                     res.status(201).json({
