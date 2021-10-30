@@ -1,11 +1,12 @@
 import express from 'express'
-import data from './data.js'
+// import data from './data.js'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
+import bodyParser from 'body-parser'
 import userRouter from './routers/userRouter.js'
 import productRouter from './routers/productRouter.js'
-import bodyParser from 'body-parser'
+import orderRouter from './routers/orderRouter.js'
 
 dotenv.config()
 
@@ -34,11 +35,11 @@ app.get('/', (req, res) => {
      res.send('Server is built')
 })
 
-app.get('/api/products', (req, res) => {
-     res.status(200).json({
-          data: data
-     })
-})
+// app.get('/api/products', (req, res) => {
+//      res.status(200).json({
+//           data: data
+//      })
+// })
 
 // app.get('/api/product/:_id', (req, res) => {
 //      const product = data.products.find((x) => x._id === req.params._id)
@@ -53,6 +54,8 @@ app.get('/api/products', (req, res) => {
 
 app.use('/api/users', userRouter)
 app.use('/api/products', productRouter)
+app.use('/api/products', orderRouter)
+
 
 app.use((err, req, res, next) => {
      res.status(500).send({
@@ -63,5 +66,5 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT
 
 app.listen(port, () => {
-     console.log(`Server started on http://localhost:${port}`)
+     console.log(`Server started on http://127.0.0.1:${port}`)
 })

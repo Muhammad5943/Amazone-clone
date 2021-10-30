@@ -6,10 +6,11 @@ import Product from '../models/productModel.js'
 const productRouter = express.Router()
 
 productRouter.get(
-     '/seed',
+     '/',
      expressAsyncHandler(async (req,res) => {
           // try {
                const products = await Product.find({})
+               // console.log('products ', products);
                res.status(200).json({
                     products: products
                })
