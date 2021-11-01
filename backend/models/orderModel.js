@@ -57,38 +57,54 @@ const orderSchema = new mongoose.Schema(
                type: String, 
                required: true 
           },
+
+          paymentResult: {
+               _id: String,
+               status: String,
+               update_time: String,
+               email_address: String,
+          },
+
           itemsPrice: { 
                type: Number, 
                required: true 
           },
+          
           shippingPrice: { 
                type: Number, 
                required: true 
           },
+          
           taxPrice: { 
                type: Number, 
                required: true 
           },
+
           totalPrice: { 
                type: Number, 
                required: true 
           },
+
           user: { 
                type: Relation.ObjectId, 
                ref: 'User', 
                required: true 
           },
+
           isPaid: { 
                type: Boolean, 
                default: false 
           },
+
           paidAt: { 
                type: Date 
           },
+
           isDelivered: { 
                type: Boolean, 
                default: false 
           },
+
           deliveredAt: { 
                type: Date 
           }
