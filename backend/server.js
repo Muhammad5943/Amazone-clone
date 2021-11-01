@@ -54,7 +54,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRouter)
 app.use('/api/products', productRouter)
-app.use('/api/products', orderRouter)
+app.use('/api/orders', orderRouter)
 app.use('/api/config/paypal', (req,res) => {
      res.status(200).send(process.env.PAYPAL_CLIENT_ID)
 })
