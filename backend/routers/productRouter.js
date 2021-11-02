@@ -73,23 +73,59 @@ productRouter.post(
      isAuth,
      isAdmin,
      expressAsyncHandler(async (req,res) => {
-          const product = new Product({
-               name: 'Muhammad Aji ' + Date.now(),
-               image: '/images/p1.jpg',
-               price: 0,
-               category: 'sample category',
-               brand: 'sample brand',
-               countInStock: 0,
-               rating: 0,
-               numReviews: 0,
-               description: 'sample description'
-          })
+          // try {
+               const product = new Product({
+                    name: 'Muhammad Aji ' + Date.now(),
+                    image: '/images/p1.jpg',
+                    price: 0,
+                    category: 'sample category',
+                    brand: 'sample brand',
+                    countInStock: 0,
+                    rating: 0,
+                    numReviews: 0,
+                    description: 'sample description'
+               })
+     
+               const productCreated = await product.save()
+               res.status(201).json({
+                    message: 'Product Created',
+                    product: productCreated
+               })
+          // } catch (error) {
+          //      res.status(500).json({
+          //           error: error
+          //      })
+          // }
+     })
+)
 
-          const productCreated = await product.save()
-          res.status(201).json({
-               message: 'Product Created',
-               product: productCreated
-          })
+productRouter.put(
+     '/:_id',
+     isAuth,
+     isAdmin,
+     expressAsyncHandler(async (req,res) => {
+          const productId = req.params._id
+          const product = await Product.findById(productId)
+
+          if (product) {
+               product.name = req.body.name
+               product.price = req.body.price
+               product.image = req.body.image
+               product.category = req.body.category
+               product.brand = req.body.brand
+               product.countInStock = req.body.countInStock
+               product.description = req.body.description
+               
+               const updatedProduct = await product.save()
+               res.status(200).json({ 
+                    message: 'Product Updated', 
+                    product: updatedProduct 
+               })
+          } else {
+               res.status(404).json({ 
+                    message: 'Product Not Found' 
+               })
+          }
      })
 )
 
