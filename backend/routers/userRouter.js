@@ -102,6 +102,8 @@ userRouter.put(
                     user.password = bcrypt.hashSync(req.body.password, 8)
                }
 
+               Object.assign(user)
+               // console.log('save token', Object.assign(user));
                const updateUser = await user.save()
                res.status(201).json({
                     _id: updateUser._id,
