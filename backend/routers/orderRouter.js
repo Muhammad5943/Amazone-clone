@@ -9,13 +9,29 @@ orderRouter.get(
      '/mine',
      isAuth,
      expressAsyncHandler(async (req,res) => {
-          const orders = await Order.find({
-               user: req.user._id
-          })
+          try {
+               const orders = await Order.find({
+                    user: req.user._id
+               })
 
-          req.status(200),json({
-               orders: orders
-          })
+               if (!orders) {
+                    res.status(404).json({
+                         message: 'Order not found'
+                    })
+               }
+     
+               // console.log('user Auth ', req.user._id)
+     
+               // console.log('orders data ', orders)
+     
+               res.status(200).json({
+                    orders: orders
+               })
+          } catch (error) {
+               return {
+                    error: error
+               }                
+          }
      })
 )
 
