@@ -1,5 +1,6 @@
 import express from 'express'
 // import data from './data.js'
+import path from 'path'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
@@ -7,6 +8,7 @@ import bodyParser from 'body-parser'
 import userRouter from './routers/userRouter.js'
 import productRouter from './routers/productRouter.js'
 import orderRouter from './routers/orderRouter.js'
+import uploadRouter from './routers/uploadRouter.js'
 
 dotenv.config()
 
@@ -52,12 +54,16 @@ app.get('/', (req, res) => {
 //      }
 // })
 
+app.use('/api/uploads', uploadRouter)
 app.use('/api/users', userRouter)
 app.use('/api/products', productRouter)
 app.use('/api/orders', orderRouter)
-app.use('/api/config/paypal', (req,res) => {
-     res.status(200).send(process.env.PAYPAL_CLIENT_ID)
+app.get('/api/config/paypal', (req, res) => {
+     res.send(process.env.PAYPAL_CLIENT_ID)
 })
+
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 app.use((err, req, res, next) => {
      res.status(500).send({

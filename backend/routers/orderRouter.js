@@ -28,9 +28,10 @@ orderRouter.get(
                     orders: orders
                })
           } catch (error) {
-               return {
+               res.status(500).json({
+                    message: "server error",
                     error: error
-               }                
+               })              
           }
      })
 )
@@ -39,26 +40,33 @@ orderRouter.post(
      '/',
      isAuth,
      expressAsyncHandler(async (req, res) => {
-          if (req.body.orderItems.length === 0) {
-               res.status(400).json({
-                    message: 'Cart is empty'
-               })
-          } else {
-               const order = new Order({
-                    orderItems: req.body.orderItems,
-                    shippingAddress: req.body.shippingAddress,
-                    paymentMethod: req.body.paymentMethod,
-                    itemsPrice: req.body.itemsPrice,
-                    shippingPrice: req.body.shippingPrice,
-                    taxPrice: req.body.taxPrice,
-                    totalPrice: req.body.totalPrice,
-                    user: req.user._id
-               })
-
-               const createdOrder = await order.save()
-               res.status(201).json({
-                    message: 'New Order Created', 
-                    order: createdOrder
+          try {
+               if (req.body.orderItems.length === 0) {
+                    res.status(400).json({
+                         message: 'Cart is empty'
+                    })
+               } else {
+                    const order = new Order({
+                         orderItems: req.body.orderItems,
+                         shippingAddress: req.body.shippingAddress,
+                         paymentMethod: req.body.paymentMethod,
+                         itemsPrice: req.body.itemsPrice,
+                         shippingPrice: req.body.shippingPrice,
+                         taxPrice: req.body.taxPrice,
+                         totalPrice: req.body.totalPrice,
+                         user: req.user._id
+                    })
+     
+                    const createdOrder = await order.save()
+                    res.status(201).json({
+                         message: 'New Order Created', 
+                         order: createdOrder
+                    })
+               }
+          } catch (error) {
+               res.status(500).json({
+                    message: "server error",
+                    error: error
                })
           }
      })
