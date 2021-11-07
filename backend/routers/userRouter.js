@@ -105,7 +105,7 @@ userRouter.put(
                Object.assign(user)
                // console.log('save token', Object.assign(user));
                const updateUser = await user.save()
-               res.status(201).json({
+               res.status(200).json({
                     _id: updateUser._id,
                     name: updateUser.name,
                     email: updateUser.email,
