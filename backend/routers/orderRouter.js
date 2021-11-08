@@ -148,19 +148,24 @@ orderRouter.delete(
 )
 
 orderRouter.put(
-     '/:id/deliver',
+     '/:_id/deliver',
      isAuth,
      isAdmin,
      expressAsyncHandler(async (req, res) => {
-     const order = await Order.findById(req.params.id);
+          const order = await Order.findById(req.params._id)
           if (order) {
-               order.isDelivered = true;
-               order.deliveredAt = Date.now();
+               order.isDelivered = true
+               order.deliveredAt = Date.now()
           
-               const updatedOrder = await order.save();
-               res.send({ message: 'Order Delivered', order: updatedOrder });
+               const updatedOrder = await order.save()
+               res.status(200).json({ 
+                    message: 'Order Delivered', 
+                    order: updatedOrder 
+               })
           } else {
-               res.status(404).send({ message: 'Order Not Found' });
+               res.status(404).json({ 
+                    message: 'Order Not Found'
+               })
           }
      })
 )
