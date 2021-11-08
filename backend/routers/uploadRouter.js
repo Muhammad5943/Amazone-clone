@@ -20,6 +20,7 @@ uploadRouter.post(
      '/',
      isAuth,
      upload.single('image'), (req,res) => {
+          console.log('inside')
           res.status(201).send(`/${req.file.path}`)
      }
 )

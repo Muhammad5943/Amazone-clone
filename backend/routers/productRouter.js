@@ -11,7 +11,7 @@ productRouter.get(
      expressAsyncHandler(async (req,res) => {
           // try {
                const products = await Product.find({})
-               // console.log('products ', products);
+               // console.log('products ', products)
                res.status(200).json({
                     products: products
                })
@@ -27,7 +27,7 @@ productRouter.post(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // try {
-               console.log('data ', data);
+               console.log('data ', data)
                if (data.products) {
                     const createProducts = await Product.insertMany(data.products)
                     res.status(201).json({
@@ -76,7 +76,7 @@ productRouter.post(
           // try {
                const product = new Product({
                     name: 'Muhammad Aji ' + Date.now(),
-                    image: '/images/p1.jpg',
+                    image: '/images/p1.png',
                     price: 0,
                     category: 'sample category',
                     brand: 'sample brand',
@@ -120,6 +120,26 @@ productRouter.put(
                res.status(200).json({ 
                     message: 'Product Updated', 
                     product: updatedProduct 
+               })
+          } else {
+               res.status(404).json({ 
+                    message: 'Product Not Found' 
+               })
+          }
+     })
+)
+
+productRouter.delete(
+     '/:_id',
+     isAuth,
+     isAdmin,
+     expressAsyncHandler(async (req, res) => {
+          const product = await Product.findById(req.params._id)
+          if (product) {
+               const deleteProduct = await product.remove()
+               res.status(200).json({ 
+                    message: 'Product Deleted', 
+                    product: deleteProduct 
                })
           } else {
                res.status(404).json({ 
