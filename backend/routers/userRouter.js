@@ -75,6 +75,8 @@ userRouter.post(
 
 userRouter.get(
      '/:_id',
+     isAuth,
+     isAdmin,
      expressAsyncHandler(async (req,res) => {
           const user = await User.findById(req.params._id)
           if (user) {
@@ -125,6 +127,63 @@ userRouter.get(
           res.status(200).json({
                'users': users
           })
+     })
+)
+
+userRouter.put(
+     '/:_id',
+     isAuth,
+     isAdmin,
+     expressAsyncHandler(async (req, res) => {
+          // console.log('inside');
+          const user = await User.findById(req.params._id)
+          console.log('user ', user)
+          if (user) {
+               user.name = req.body.name || user.name
+               user.email = req.body.email || user.email
+               user.isSeller = req.body.isSeller || user.isSeller
+               user.isAdmin = req.body.isAdmin || user.isAdmin
+               
+               const updatedUser = await user.save()
+               res.status(200).json({ 
+                    message: 'User Updated', 
+                    user: updatedUser 
+               })
+          } else {
+               res.status(404).json({ 
+                    message: 'User Not Found' 
+               })
+          }
+     })
+)
+
+userRouter.delete(
+     '/:_id',
+     isAuth,
+     isAdmin,
+     expressAsyncHandler(async (req, res) => {
+          const user = await User.findById(req.params._id)
+
+          if (user) {
+               if (user.isAdmin === true) {
+                    res.status(400).json({ 
+                         message: 'Can Not Delete Admin User',
+                         user: user
+                    })
+
+                    return
+               }
+
+               const deleteUser = await user.remove()
+               res.status(200).json({ 
+                    message: 'User Deleted', 
+                    user: deleteUser
+               })
+          } else {
+               res.status(404).json({ 
+                    message: 'User Not Found' 
+               })
+          }
      })
 )
 

@@ -43,8 +43,10 @@ export const isAuth = (req, res, next) => {
 
 export const isAdmin = (req,res,next) => {
      if (req.user && req.user.isAdmin) {
+          // console.log('true ', req.user);
           next()
      } else {
+          // console.log('false ',req.user);
           res.status(401).json({
                message: 'Invalid Admin Token'
           })
