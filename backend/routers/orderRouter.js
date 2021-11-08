@@ -10,8 +10,8 @@ orderRouter.get(
      isAuth,
      isAdmin,
      expressAsyncHandler(async (req, res) => {
-          const orders = await Order.find({}).populate('user', 'name');
-          res.send(orders);
+          const orders = await Order.find({}).populate('user', 'name')
+          res.send(orders)
      })
 )
 
@@ -124,6 +124,26 @@ orderRouter.put(
                     message: 'Order not found'
                })
           } 
+     })
+)
+
+orderRouter.delete(
+     '/:_id',
+     isAuth,
+     isAdmin,
+     expressAsyncHandler(async (req, res) => {
+          const order = await Order.findById(req.params._id)
+          if (order) {
+               const deleteOrder = await order.remove()
+               res.status(200).json({ 
+                    message: 'Order Deleted', 
+                    order: deleteOrder 
+               })
+          } else {
+               res.status(404).json({ 
+                    message: 'Order Not Found' 
+               })
+          }
      })
 )
 
