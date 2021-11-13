@@ -1,17 +1,25 @@
 import express from 'express'
 import expressAsyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
-import { isAdmin, isAuth } from '../utils.js'
+import { isAdmin, isAuth, isSellerOrAdmin } from '../utils.js'
 
 const orderRouter = express.Router()
 
 orderRouter.get(
      '/',
      isAuth,
-     isAdmin,
+     isSellerOrAdmin,
      expressAsyncHandler(async (req, res) => {
-          const orders = await Order.find({}).populate('user', 'name')
-          res.send(orders)
+          const seller = req.query.seller || ''
+          const sellerFilter = seller ? { seller } : {}
+
+          const orders = await Order.find({ ...sellerFilter }).populate(
+               'user',
+               'name'
+          )
+          res.status(200).json({
+               orders: orders
+          })
      })
 )
 
@@ -57,6 +65,7 @@ orderRouter.post(
                     })
                } else {
                     const order = new Order({
+                         seller: req.body.orderItems[0].seller,
                          orderItems: req.body.orderItems,
                          shippingAddress: req.body.shippingAddress,
                          paymentMethod: req.body.paymentMethod,

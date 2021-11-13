@@ -2,7 +2,7 @@ import express from 'express'
 import expressAsyncHandler from 'express-async-handler'
 import data from '../data.js'
 import Product from '../models/productModel.js'
-import { isAdmin, isAuth } from '../utils.js'
+import { isAdmin, isAuth, isSellerOrAdmin } from '../utils.js'
 
 const productRouter = express.Router()
 
@@ -10,11 +10,19 @@ productRouter.get(
      '/',
      expressAsyncHandler(async (req,res) => {
           // try {
-               const products = await Product.find({})
-               // console.log('products ', products)
+               const seller = req.query.seller || ''
+               const sellerFilter = seller ? { seller } : {}
+               const products = await Product.find({ ...sellerFilter })
+               .populate(
+                    'seller',
+                    'seller.name seller.logo'
+               )
+
                res.status(200).json({
                     products: products
                })
+
+               // console.log('productAPI ',products);
           // } catch (error) {
           //      res.status(500).json({
           //           error: error
@@ -27,7 +35,7 @@ productRouter.post(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // try {
-               console.log('data ', data)
+               // console.log('data ', data)
                if (data.products) {
                     const createProducts = await Product.insertMany(data.products)
                     res.status(201).json({
@@ -51,6 +59,10 @@ productRouter.get(
      expressAsyncHandler(async (req,res) => {
           // try {
                const product = await Product.findById(req.params._id)
+               .populate(
+                    'seller',
+                    'seller.name seller.logo seller.rating seller.numReviews'
+               )
                if (product) {
                     res.status(200).json({
                          product: product
@@ -71,7 +83,7 @@ productRouter.get(
 productRouter.post(
      '/',
      isAuth,
-     isAdmin,
+     isSellerOrAdmin,
      expressAsyncHandler(async (req,res) => {
           // try {
                const product = new Product({
@@ -102,7 +114,7 @@ productRouter.post(
 productRouter.put(
      '/:_id',
      isAuth,
-     isAdmin,
+     isSellerOrAdmin,
      expressAsyncHandler(async (req,res) => {
           const productId = req.params._id
           const product = await Product.findById(productId)

@@ -1,11 +1,17 @@
 import mongoose from 'mongoose'
 
+const Relation = mongoose.Schema.Types
+
 const productSchema = new mongoose.Schema(
      {
           name: { 
                type: String, 
                required: true, 
                unique: true 
+          },
+          seller: { 
+               type: Relation.ObjectID, 
+               ref: 'User'
           },
           image: { 
                type: String, 

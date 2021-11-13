@@ -91,6 +91,11 @@ const orderSchema = new mongoose.Schema(
                required: true 
           },
 
+          seller: { 
+               type: Relation.ObjectID, 
+               ref: 'User'
+          },
+
           isPaid: { 
                type: Boolean, 
                default: false 

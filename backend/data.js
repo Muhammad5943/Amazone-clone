@@ -6,13 +6,29 @@ const data = {
       name: 'Muhammad',
       email: 'muhammad@gmail.com',
       password: bcrypt.hashSync('123456789', 10),
-      isAdmin: true
+      isAdmin: true,
+      isSaller: true
     },
     {
       name: 'Aji',
       email: 'aji@gmail.com',
       password: bcrypt.hashSync('secret', 8),
-      isAdmin: false
+      isAdmin: false,
+      isAdmin: true
+    },
+    {
+      name: 'Galang',
+      email: 'galang@gmail.com',
+      password: bcrypt.hashSync('secret', 8),
+      isAdmin: false,
+      isAdmin: true
+    },
+    {
+      name: 'Hari',
+      email: 'hari@gmail.com',
+      password: bcrypt.hashSync('secret', 8),
+      isAdmin: false,
+      isAdmin: true
     }
   ],
 

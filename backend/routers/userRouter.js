@@ -11,7 +11,7 @@ userRouter.get(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // await User.remove({})
-          // console.log('inside');
+          // console.log('inside')
           const Users = await User.find()
           res.status(200).json({ Users: Users }) 
      })
@@ -21,7 +21,7 @@ userRouter.post(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // await User.remove({})
-          // console.log('inside');
+          // console.log('inside')
           const createdUsers = await User.insertMany(data.users)
           res.status(200).json({ createdUsers }) 
      })
@@ -31,7 +31,7 @@ userRouter.post(
      '/signin',
      expressAsyncHandler(async (req,res) => {
           const user = await User.findOne({ email: req.body.email })
-          // console.log('user ', user);
+          // console.log('user ', user)
           // console.log(bcrypt.compareSync(req.body.password, user.password))
           if (user) {
                if (bcrypt.compareSync(req.body.password, user.password)) {
@@ -40,6 +40,7 @@ userRouter.post(
                          name: user.name,
                          email: user.email,
                          isAdmin: user.isAdmin,
+                         isSeller: user.isSeller,
                          token: generateToken(user)
                     })
 
@@ -68,6 +69,7 @@ userRouter.post(
                name: createdUser.name,
                email: createdUser.email,
                isAdmin: createdUser.isAdmin,
+               isSeller: user.isSeller,
                token: generateToken(createdUser)
           })
      })
@@ -76,7 +78,6 @@ userRouter.post(
 userRouter.get(
      '/:_id',
      isAuth,
-     isAdmin,
      expressAsyncHandler(async (req,res) => {
           const user = await User.findById(req.params._id)
           if (user) {
@@ -96,22 +97,29 @@ userRouter.put(
      isAuth,
      expressAsyncHandler(async (req,res) => {
           const user = await User.findById(req.user._id)
-          // console.log('user ', user);
+          // console.log('user ', user)
           if (user) {
                user.name = req.body.name || user.name
                user.email = req.body.email || user.email
+               if (user.isSeller) {
+                    user.seller.name = req.body.sellerName || user.seller.name
+                    user.seller.logo = req.body.sellerLogo || user.seller.logo
+                    user.seller.description =
+                         req.body.sellerDescription || user.seller.description
+               }
                if (req.body.password) {
                     user.password = bcrypt.hashSync(req.body.password, 8)
                }
 
                Object.assign(user)
-               // console.log('save token', Object.assign(user));
+               // console.log('save token', Object.assign(user))
                const updateUser = await user.save()
                res.status(200).json({
                     _id: updateUser._id,
                     name: updateUser.name,
                     email: updateUser.email,
                     isAdmin: updateUser.isAdmin,
+                    isSeller: user.isSeller,
                     token: generateToken(updateUser)
                })
           }
@@ -135,9 +143,9 @@ userRouter.put(
      isAuth,
      isAdmin,
      expressAsyncHandler(async (req, res) => {
-          // console.log('inside');
+          // console.log('inside')
           const user = await User.findById(req.params._id)
-          console.log('user ', user)
+          // console.log('user ', user)
           if (user) {
                user.name = req.body.name || user.name
                user.email = req.body.email || user.email
