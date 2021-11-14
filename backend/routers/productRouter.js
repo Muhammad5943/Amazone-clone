@@ -10,10 +10,17 @@ productRouter.get(
      '/',
      expressAsyncHandler(async (req,res) => {
           // try {
+               const name = req.query.name || ''
+               const category = req.query.category || ''
                const seller = req.query.seller || ''
                const sellerFilter = seller ? { seller } : {}
-               const products = await Product.find({ ...sellerFilter })
-               .populate(
+               const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {}
+               const categoryFilter = category ? { category } : {}
+               const products = await Product.find({ 
+                    ...sellerFilter,
+                    ...nameFilter,
+                    ...categoryFilter
+               }).populate(
                     'seller',
                     'seller.name seller.logo'
                )
@@ -22,7 +29,7 @@ productRouter.get(
                     products: products
                })
 
-               // console.log('productAPI ',products);
+               // console.log('productAPI ', products[0].seller._id)
           // } catch (error) {
           //      res.status(500).json({
           //           error: error
@@ -31,11 +38,23 @@ productRouter.get(
      })
 )
 
+productRouter.get(
+     '/categories',
+     expressAsyncHandler(async (req, res) => {
+          const categories = await Product.find().distinct('category')
+
+          // console.log('categories ', categories)
+          res.status(200).json({
+               categories: categories
+          })
+     })
+)
+
 productRouter.post(
      '/seed',
      expressAsyncHandler(async (req,res) => {
           // try {
-               // console.log('data ', data)
+               console.log('data ', data)
                if (data.products) {
                     const createProducts = await Product.insertMany(data.products)
                     res.status(201).json({
@@ -63,6 +82,8 @@ productRouter.get(
                     'seller',
                     'seller.name seller.logo seller.rating seller.numReviews'
                )
+
+               // console.log('productId ', product)
                if (product) {
                     res.status(200).json({
                          product: product
@@ -88,6 +109,7 @@ productRouter.post(
           // try {
                const product = new Product({
                     name: 'Muhammad Aji ' + Date.now(),
+                    seller: req.user._id,
                     image: '/images/p1.png',
                     price: 0,
                     category: 'sample category',

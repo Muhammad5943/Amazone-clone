@@ -13,7 +13,8 @@ orderRouter.get(
           const seller = req.query.seller || ''
           const sellerFilter = seller ? { seller } : {}
 
-          const orders = await Order.find({ ...sellerFilter }).populate(
+          const orders = await Order.find({ ...sellerFilter })
+          .populate(
                'user',
                'name'
           )
