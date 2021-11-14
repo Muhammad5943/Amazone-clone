@@ -1,7 +1,13 @@
 import express from 'express'
 import expressAsyncHandler from 'express-async-handler'
 import Order from '../models/orderModel.js'
-import { isAdmin, isAuth, isSellerOrAdmin } from '../utils.js'
+import {
+     isAdmin,
+     isAuth,
+     isSellerOrAdmin,
+     mailgun,
+     payOrderEmailTemplate,
+} from '../utils.js'
 
 const orderRouter = express.Router()
 
@@ -113,7 +119,10 @@ orderRouter.put(
      '/:_id/pay',
      isAuth,
      expressAsyncHandler(async (req,res) => {
-          const order = await Order.findById(req.params._id)
+          const order = await Order.findById(req.params.id).populate(
+               'user',
+               'email name'
+          )
           if (order) {
                order.isPaid = true
                order.paidAt = Date.now()

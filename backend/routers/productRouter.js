@@ -76,21 +76,21 @@ productRouter.post(
      expressAsyncHandler(async (req,res) => {
           // try {
                console.log('data ', data)
-               if (data.products) {
-                    const createProducts = await Product.insertMany(data.products)
-                    res.status(201).json({
-                         products: createProducts
-                    })
+               const seller = await User.findOne({ isSeller: true });
+               if (seller) {
+                    const products = data.products.map((product) => ({
+                         ...product,
+                         seller: seller._id,
+                    }))
+                    const createdProducts = await Product.insertMany(products);
+                         res.send({ createdProducts });
                } else {
-                    res.status(404).json({
-                         message: "product not found"
-                    })
+                    res
+                         .status(500)
+                         .send({ 
+                              message: 'No seller found. first run /api/users/seed' 
+                         })
                }
-          // } catch (error) {
-          //      res.status(500).json({
-          //           error: error
-          //      })
-          // }
      })
 )
 
